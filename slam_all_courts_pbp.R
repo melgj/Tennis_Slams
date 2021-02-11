@@ -11,8 +11,8 @@ allMatches <- list.files(pattern="*matches.csv") %>%
 
 colnames(allMatches)
 
-w <- read_csv("/home/magljo/wta/wta_tennis/SR_ratings_jan21.csv", col_names = T)
-m <- read_csv("/home/magljo/atp/atp_SR_ratings_jan21.csv", col_names = T)
+w <- read_csv("wta_SR_ratings_jan21.csv", col_names = T)
+m <- read_csv("atp_SR_ratings_jan21.csv", col_names = T)
 
 w50 <- w %>% 
   mutate(Rank = min_rank(desc(Rating))) %>% 
