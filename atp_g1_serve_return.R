@@ -10,6 +10,9 @@ atpPts$Surface <- case_when(atpPts$slam == "ausopen" | atpPts$slam == "usopen" ~
                             atpPts$slam == "frenchopen" ~ "Clay",
                             atpPts$slam == "wimbledon" ~ "Grass")
 
+atpPts$player1 <- str_replace_all(atpPts$player1, "-", " ")
+atpPts$player2 <- str_replace_all(atpPts$player2, "-", " ")
+
 t50 <- read_csv("atp_SR_ratings_jan21.csv", col_names = T) %>% 
   mutate(Rank = min_rank(desc(Rating))) %>% 
   filter(Rank <= 50) %>% 
