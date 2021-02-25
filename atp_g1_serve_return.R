@@ -201,7 +201,7 @@ allGmsS %>%
   xlab("Player") +
   theme(plot.title = element_text(hjust = 0.5))+
   coord_flip() +
-  facet_wrap(~ Surface)
+  facet_wrap(~ Surface, ncol = 3)
 
 allGmsR %>% 
   group_by(Receiver_Name, Surface) %>% 
@@ -219,7 +219,7 @@ allGmsR %>%
   xlab("Player") +
   theme(plot.title = element_text(hjust = 0.5))+
   coord_flip() +
-  facet_wrap(~ Surface)
+  facet_wrap(~ Surface, ncol = 3)
 
 # All Surfaces
 
