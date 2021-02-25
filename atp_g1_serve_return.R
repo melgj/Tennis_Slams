@@ -2,9 +2,24 @@ library(tidyverse)
 library(lubridate)
 library(stringr)
 
-atpPts <- read_csv("atp_slam_points_all.csv", col_names = T)
+slamPts <- read_csv("slam_complete_pbp.csv", col_names = T)
 
-glimpse(atpPts)
+slamPts <- slamPts %>% 
+  filter(status == "Complete" | is.na(status))
+  
+tail(slamPts)
+
+glimpse(slamPts$status)
+
+t50 <- read_csv("atp_SR_ratings_jan21.csv", col_names = T) %>%
+  mutate(Rank = min_rank(desc(Rating))) %>%
+  filter(Rank <= 50) %>%
+  select(Player)
+
+t50
+
+atpPts <- slamPts %>% 
+  filter(player1 %in% t50$Player | player2 %in% t50$Player)
 
 atpPts$Surface <- case_when(atpPts$slam == "ausopen" | atpPts$slam == "usopen" ~ "Hard",
                             atpPts$slam == "frenchopen" ~ "Clay",
@@ -13,16 +28,8 @@ atpPts$Surface <- case_when(atpPts$slam == "ausopen" | atpPts$slam == "usopen" ~
 atpPts$player1 <- str_replace_all(atpPts$player1, "-", " ")
 atpPts$player2 <- str_replace_all(atpPts$player2, "-", " ")
 
-t50 <- read_csv("atp_SR_ratings_jan21.csv", col_names = T) %>% 
-  mutate(Rank = min_rank(desc(Rating))) %>% 
-  filter(Rank <= 50) %>% 
-  select(Rank, everything())
-
-tail(t50)
-
 g1 <- atpPts %>% 
-  filter(SetNo == 1, GameNo == 1, GameWinner != 0,
-         (player1 %in% t50$Player | player2 %in% t50$Player)) %>% 
+  filter(SetNo == 1, GameNo == 1, GameWinner != 0) %>% 
   select(match_id:PointServer, P1Score, P2Score, 
          player1, player2, player1id, player2id, Surface)
 
@@ -52,7 +59,7 @@ g1s_summary %>%
 ###########################################
 
 allGms <- atpPts %>% 
-  filter(GameWinner != 0, (player1 %in% t50$Player | player2 %in% t50$Player)) %>% 
+  filter(GameWinner != 0) %>% 
   select(match_id:PointServer, P1Score, P2Score, 
          player1, player2, player1id, player2id, Surface) 
 
